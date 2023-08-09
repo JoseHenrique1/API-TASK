@@ -29,6 +29,11 @@ def Get_userkey(dic, email, senha):
 
 
 #print(get_userkey(dic, 'jose', '123' ))
+
+
+
+async def bc():
+    print('oi')
             
         
     

@@ -1,20 +1,13 @@
 from metodos import User_presente, Get_userkey, Empty_field
-
 from flask import Flask
 from flask import request
 import requests
 import json
 
-
-
 app = Flask(__name__)
 
 raiz_url = 'https://tasks-d8c9c-default-rtdb.firebaseio.com'
 f_url = '/.json'
-
-
-
-
 
 
 
@@ -24,14 +17,12 @@ def Task_List():
     
     #veriicando se a chave veio
     if Empty_field(key_user) :
-        return json.dumps({'msg': 'error'})
-    
+        return json.dumps({'msg': 'error'})  
     
     url = f'{raiz_url}/{key_user}{f_url}'
     response = requests.get(url)
     data = response.json()
-    return json.dumps(data)
-
+    return json.dumps({'msg': 'success', 'dados':data})
 
 
 
@@ -55,7 +46,6 @@ def Task_Create():
 
 @app.route("/task/update", methods=['patch'])
 def Task_Update():
-    
     key_user = request.json['key_user']
     key_task = request.json['key_task']
     title = request.json['title']
@@ -108,15 +98,8 @@ def User_Create():
     
     
 
-
-
 @app.route("/task/auth/connect", methods=['GET'])
 def Connect():
-    
-    #fazer um get no banco
-    #depois verificar se o user existe no banco
-    # se a senha é igual
-    
     email = request.json['email']
     senha = request.json['senha']
     
