@@ -1,4 +1,4 @@
-from metodos import User_presente, Get_userkey
+from metodos import User_presente, Get_userkey, Empty_field
 
 from flask import Flask
 from flask import request
@@ -23,8 +23,9 @@ def Task_List():
     key_user = request.json['key_user']
     
     #veriicando se a chave veio
-    if key_user == '':
+    if Empty_field(key_user) :
         return json.dumps({'msg': 'error'})
+    
     
     url = f'{raiz_url}/{key_user}{f_url}'
     response = requests.get(url)
@@ -41,6 +42,10 @@ def Task_Create():
     title = request.json['title']
     description = request.json['description']
     
+    if Empty_field(key_user, title) :
+        return json.dumps({'msg': 'error'})
+    
+    
     dados = {'title': title, 'description': description}
     url = f'{raiz_url}/{key_user}{f_url}'
     response = requests.post(url, json=dados) 
@@ -56,6 +61,9 @@ def Task_Update():
     title = request.json['title']
     description = request.json['description']
     
+    if Empty_field(key_user, key_task, title) :
+        return json.dumps({'msg': 'error'})
+    
     
     dados = {'title': title, 'description': description }
     url = f'{raiz_url}/{key_user}/{key_task}{f_url}'
@@ -69,10 +77,13 @@ def Task_Delete():
     key_user = request.json['key_user']
     key_task = request.json['key_task']
     
+    if Empty_field(key_user, key_task) :
+        return json.dumps({'msg': 'error'})
+    
     url = f'{raiz_url}/{key_user}/{key_task}{f_url}'
     response = requests.delete(url)
     
-    return json.dumps({'msg': 'Sucess'})
+    return json.dumps({'msg': 'success'})
 
 
 
@@ -81,23 +92,19 @@ def Task_Delete():
 
 @app.route("/task/auth/create", methods=['POST'])
 def User_Create():
-    
-    
-    
     email = request.json['email']
     senha = request.json['senha']
     
     response = requests.get(raiz_url+f_url)
     dic = response.json()
     
-    #verifica se o email ja está cadastrado
-    if User_presente(dic, email):
+    #verifica  se tem campos vazios ou se o email ja está cadastrado
+    if Empty_field(email, senha) or User_presente(dic, email):
         return json.dumps({'msg': 'error'})
     
     dados = {'auth': {'email':email, 'senha':senha}}
     response = requests.post(f'{raiz_url}{f_url}', json=dados)
-    print(response.text)
-    return json.dumps({'msg': 'sucess'})
+    return json.dumps({'msg': 'success'})
     
     
 
@@ -115,10 +122,14 @@ def Connect():
     
     response = requests.get(raiz_url+f_url)
     dic = response.json()
-    
     chave = Get_userkey(dic, email, senha)
     
-    return json.dumps({'key_user': chave})
+    #verificando se a chave nao veio
+    if chave == '':
+        return json.dumps({'msg': 'error'})
+    
+    
+    return json.dumps({'msg': 'success', 'key_user': chave})
 
 
 

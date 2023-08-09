@@ -5,6 +5,12 @@
 }
 """
 
+def Empty_field(*fields):
+    for field in fields:
+        if field == '':
+            return True
+    
+    return False
 
 def User_presente(dic, email):
     for chave, valor in dic.items():
@@ -18,7 +24,7 @@ def Get_userkey(dic, email, senha):
             if (valor['auth']['email'] == email) and (valor['auth']['senha'] == senha):
                 return chave
         
-    return None
+    return ''
 
 
 
