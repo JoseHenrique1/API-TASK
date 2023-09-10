@@ -1,17 +1,19 @@
 from metodos import User_presente, Get_userkey, Empty_field
 from flask import Flask
 from flask import request
+from flask_cors import CORS
 import requests
 import json
 
 app = Flask(__name__)
+CORS(app)
 
 raiz_url = 'https://tasks-d8c9c-default-rtdb.firebaseio.com'
 f_url = '/.json'
 
 
 
-@app.route("/task/list", methods=['GET'])
+@app.route("/task/list", methods=['GET', 'POST'])
 def Task_List():
     key_user = request.json['key_user']
     
@@ -41,7 +43,7 @@ def Task_Create():
     url = f'{raiz_url}/{key_user}{f_url}'
     response = requests.post(url, json=dados) 
     
-    return json.dumps({'msg': 'Sucess'})
+    return json.dumps({'msg': 'sucess'})
 
 
 @app.route("/task/update", methods=['patch'])
@@ -59,13 +61,15 @@ def Task_Update():
     url = f'{raiz_url}/{key_user}/{key_task}{f_url}'
     response = requests.patch(url, json=dados)
     
-    return json.dumps({'msg': 'Sucess'})
+    return json.dumps({'msg': 'sucess'})
 
 
 @app.route("/task/delete", methods=['delete'])
 def Task_Delete():
     key_user = request.json['key_user']
     key_task = request.json['key_task']
+
+    print(f"delete\n user: {key_user}\n task: {key_task} ")
     
     if Empty_field(key_user, key_task) :
         return json.dumps({'msg': 'error'})
@@ -98,9 +102,10 @@ def User_Create():
     
     
 
-@app.route("/task/auth/connect", methods=['GET'])
+@app.route("/task/auth/connect", methods=['GET', 'POST'])
 def Connect():
     email = request.json['email']
+    print(email)
     senha = request.json['senha']
     
     response = requests.get(raiz_url+f_url)
