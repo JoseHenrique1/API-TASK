@@ -8,7 +8,7 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-raiz_url = 'https://tasks-d8c9c-default-rtdb.firebaseio.com'
+from env import raiz_url
 f_url = '/.json'
 
 
