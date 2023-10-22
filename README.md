@@ -17,7 +17,7 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 
 ## 🚀 Instalando API TASK
 
-Para instalar o <nome_do_projeto>, siga estas etapas:
+Para instalar o API TASK, siga estas etapas:
 
 Linux:
 ```
